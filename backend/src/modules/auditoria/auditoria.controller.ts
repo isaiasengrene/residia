@@ -3,16 +3,18 @@ import {
   Get,
   Query,
   UseGuards,
+  Req,
   Logger,
 } from '@nestjs/common';
-import { DataSource } from 'typeorm';
 import { AuditService } from '../../common/audit.service';
+import { AuditoriaService } from './auditoria.service';
 import { RbacGuard } from '../../common/rbac.guard';
 import { Roles, PerfilUsuario } from '../../common/roles.decorator';
+import { RequestConTenant } from '../../common/tenant.middleware';
 
 interface FiltrosPaginacion {
-  pagina?: number;
-  limite?: number;
+  pagina?: string;
+  limite?: string;
 }
 
 @Controller('auditoria')
@@ -27,42 +29,22 @@ export class AuditoriaController {
 
   constructor(
     private readonly auditService: AuditService,
-    private readonly dataSource: DataSource,
+    private readonly auditoriaService: AuditoriaService,
   ) {}
 
   /**
    * GET /auditoria
-   * Devuelve el registro de auditoría paginado.
+   * Devuelve el registro de auditoría paginado del tenant activo.
    */
   @Get()
-  async listar(@Query() query: FiltrosPaginacion) {
-    const pagina = Math.max(1, Number(query.pagina) || 1);
-    const limite = Math.min(100, Math.max(1, Number(query.limite) || 50));
-    const offset = (pagina - 1) * limite;
+  async listar(
+    @Query() query: FiltrosPaginacion,
+    @Req() _req: RequestConTenant,
+  ) {
+    const pagina = Math.max(1, parseInt(query.pagina ?? '1', 10));
+    const limite = Math.min(100, Math.max(1, parseInt(query.limite ?? '50', 10)));
 
-    const [registros, [{ total }]] = await Promise.all([
-      this.dataSource.query(
-        `SELECT id, timestamp_utc, accion, usuario_id, recurso_tipo,
-                recurso_id, payload, ip_origen, hash_propio
-         FROM audit_log
-         ORDER BY timestamp_utc DESC
-         LIMIT $1 OFFSET $2`,
-        [limite, offset],
-      ),
-      this.dataSource.query<Array<{ total: string }>>(
-        `SELECT COUNT(*) AS total FROM audit_log`,
-      ),
-    ]);
-
-    return {
-      datos: registros,
-      paginacion: {
-        pagina,
-        limite,
-        total: parseInt(total, 10),
-        totalPaginas: Math.ceil(parseInt(total, 10) / limite),
-      },
-    };
+    return this.auditoriaService.listar(pagina, limite);
   }
 
   /**
@@ -70,7 +52,7 @@ export class AuditoriaController {
    * Verifica la integridad de la cadena de hashes del log de auditoría.
    */
   @Get('verificar')
-  async verificar() {
+  async verificar(@Req() _req: RequestConTenant) {
     this.logger.log('Verificación de integridad del log de auditoría iniciada');
     const resultado = await this.auditService.verificarIntegridad();
 

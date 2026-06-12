@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { BullModule } from '@nestjs/bull';
 
 import { TenantMiddleware } from './common/tenant.middleware';
+import { CommonModule } from './common/common.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ResidentesModule } from './modules/residentes/residentes.module';
 import { IncidenciasModule } from './modules/incidencias/incidencias.module';
@@ -52,6 +53,7 @@ import { AdminModule } from './modules/admin/admin.module';
     }),
 
     // Módulos de negocio
+    CommonModule,
     AuthModule,
     ResidentesModule,
     IncidenciasModule,
