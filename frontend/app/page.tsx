@@ -1,7 +1,33 @@
+'use client';
+
 // W1: Login page
-import Link from 'next/link';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { iniciarSesion } from '../lib/auth';
 
 export default function LoginPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [codigo2fa, setCodigo2fa] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [cargando, setCargando] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setCargando(true);
+    try {
+      await iniciarSesion(email, password, codigo2fa);
+      router.push('/dashboard');
+    } catch (err) {
+      const mensaje = err instanceof Error ? err.message : 'Error al iniciar sesión';
+      setError(mensaje);
+    } finally {
+      setCargando(false);
+    }
+  }
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -38,7 +64,7 @@ export default function LoginPage() {
         </div>
 
         {/* Right: login card */}
-        <div style={{
+        <form onSubmit={handleSubmit} style={{
           background: '#fff',
           borderRadius: 18,
           padding: 28,
@@ -56,60 +82,85 @@ export default function LoginPage() {
           <div style={{ fontSize: 11, fontWeight: 700, color: '#AEAEB2', textTransform: 'uppercase', letterSpacing: 0.4, marginBottom: 5 }}>
             Usuario
           </div>
-          <div style={{
-            background: '#F5F5F7', border: '1px solid #E5E5EA', borderRadius: 10,
-            padding: '11px 13px', fontSize: 13.5, color: '#424245', marginBottom: 13,
-          }}>
-            Laura Beltrán · Coordinación
-          </div>
+          <input
+            type="email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            placeholder="correo@residencia.es"
+            required
+            style={{
+              width: '100%', boxSizing: 'border-box',
+              background: '#F5F5F7', border: '1px solid #E5E5EA', borderRadius: 10,
+              padding: '11px 13px', fontSize: 13.5, color: '#424245', marginBottom: 13,
+              outline: 'none',
+            }}
+          />
 
           <div style={{ fontSize: 11, fontWeight: 700, color: '#AEAEB2', textTransform: 'uppercase', letterSpacing: 0.4, marginBottom: 5 }}>
             Contraseña
           </div>
-          <div style={{
-            background: '#F5F5F7', border: '1px solid #E5E5EA', borderRadius: 10,
-            padding: '11px 13px', fontSize: 13.5, color: '#424245', marginBottom: 16,
-          }}>
-            ••••••••••
-          </div>
+          <input
+            type="password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            placeholder="••••••••••"
+            required
+            style={{
+              width: '100%', boxSizing: 'border-box',
+              background: '#F5F5F7', border: '1px solid #E5E5EA', borderRadius: 10,
+              padding: '11px 13px', fontSize: 13.5, color: '#424245', marginBottom: 16,
+              outline: 'none',
+            }}
+          />
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 5 }}>
             <span style={{ fontSize: 11, fontWeight: 700, color: '#AEAEB2', textTransform: 'uppercase', letterSpacing: 0.4 }}>Código 2FA</span>
-            <span style={{ fontSize: 11, color: '#0071E3', fontWeight: 600 }}>Reenviar</span>
           </div>
-          <div style={{ display: 'flex', gap: 7, marginBottom: 18 }}>
-            {['4','8','1'].map((d, i) => (
-              <div key={i} style={{
-                flex: 1, textAlign: 'center',
-                background: '#fff', border: '1.5px solid #0071E3',
-                borderRadius: 9, padding: '10px 0',
-                fontSize: 18, fontWeight: 700, color: '#1D1D1F',
-              }}>{d}</div>
-            ))}
-            {['·','·','·'].map((d, i) => (
-              <div key={i+3} style={{
-                flex: 1, textAlign: 'center',
-                background: '#F5F5F7', border: '1.5px solid #E5E5EA',
-                borderRadius: 9, padding: '10px 0',
-                fontSize: 18, fontWeight: 700, color: '#C7C7CC',
-              }}>{d}</div>
-            ))}
-          </div>
+          <input
+            type="text"
+            value={codigo2fa}
+            onChange={e => setCodigo2fa(e.target.value)}
+            placeholder="000000"
+            maxLength={6}
+            required
+            style={{
+              width: '100%', boxSizing: 'border-box',
+              background: '#F5F5F7', border: '1.5px solid #E5E5EA', borderRadius: 9,
+              padding: '10px 13px', fontSize: 18, fontWeight: 700,
+              color: '#1D1D1F', marginBottom: 18, textAlign: 'center',
+              letterSpacing: 6, outline: 'none',
+            }}
+          />
 
-          <Link href="/dashboard">
+          {error && (
             <div style={{
-              background: '#0071E3', color: '#fff', textAlign: 'center',
-              fontWeight: 700, fontSize: 14, padding: 12, borderRadius: 11,
-              cursor: 'pointer',
+              background: '#FFF0F0', border: '1px solid #FFCCCC',
+              borderRadius: 9, padding: '10px 13px',
+              fontSize: 13, color: '#CC0000', marginBottom: 14,
             }}>
-              Verificar y entrar
+              {error}
             </div>
-          </Link>
+          )}
+
+          <button
+            type="submit"
+            disabled={cargando}
+            style={{
+              width: '100%',
+              background: cargando ? '#86868B' : '#0071E3',
+              color: '#fff', textAlign: 'center',
+              fontWeight: 700, fontSize: 14, padding: 12, borderRadius: 11,
+              cursor: cargando ? 'not-allowed' : 'pointer',
+              border: 'none',
+            }}
+          >
+            {cargando ? 'Verificando…' : 'Verificar y entrar'}
+          </button>
           <div style={{ textAlign: 'center', fontSize: 11.5, color: '#AEAEB2', marginTop: 13, lineHeight: 1.4 }}>
             Doble factor obligatorio para perfiles clínicos<br/>
             ENS categoría MEDIA · RGPD
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );

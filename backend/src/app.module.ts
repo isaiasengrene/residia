@@ -10,6 +10,9 @@ import { ResidentesModule } from './modules/residentes/residentes.module';
 import { IncidenciasModule } from './modules/incidencias/incidencias.module';
 import { AuditoriaModule } from './modules/auditoria/auditoria.module';
 import { AdminModule } from './modules/admin/admin.module';
+import { ConsentimientosModule } from './modules/consentimientos/consentimientos.module';
+import { ExpedienteModule } from './modules/expediente/expediente.module';
+import { TurnosModule } from './modules/turnos/turnos.module';
 
 @Module({
   imports: [
@@ -59,6 +62,9 @@ import { AdminModule } from './modules/admin/admin.module';
     IncidenciasModule,
     AuditoriaModule,
     AdminModule,
+    ConsentimientosModule,
+    ExpedienteModule,
+    TurnosModule,
   ],
 })
 export class AppModule implements NestModule {
