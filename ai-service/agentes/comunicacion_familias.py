@@ -4,7 +4,7 @@ Redacta mensajes para familiares basándose en el estado del residente.
 El profesional SIEMPRE aprueba antes de enviar. Nunca envía automáticamente.
 """
 from core.pseudonimizador import pseudonimizar_incidencia
-from core.claude_client import llamar_claude
+from core.llm_factory import obtener_proveedor
 
 SYSTEM_PROMPT = """Eres un asistente de comunicación para residencias de mayores en España.
 Redactas mensajes para familiares de residentes con un tono cálido, profesional y tranquilizador.
@@ -34,7 +34,8 @@ Situación del residente {datos_pseudo.get('residente', 'RES-XXX')} (área: {dat
 
 Redacta el mensaje para el familiar."""
 
-    borrador_texto = await llamar_claude(SYSTEM_PROMPT, prompt, mapa=None, max_tokens=600)
+    proveedor = obtener_proveedor("COMUNICACION")
+    borrador_texto = await proveedor.completar(SYSTEM_PROMPT, prompt, max_tokens=600)
 
     return {
         "borrador": borrador_texto,

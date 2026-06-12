@@ -5,7 +5,7 @@ SIEMPRE requiere revisión y firma del equipo multidisciplinar.
 Nunca toma decisiones clínicas de forma autónoma.
 """
 from core.pseudonimizador import pseudonimizar_seguimiento, pseudonimizar_incidencia
-from core.claude_client import llamar_claude
+from core.llm_factory import obtener_proveedor
 from core.db import conexion_tenant
 import json
 
@@ -64,7 +64,8 @@ Historial de incidencias (últimas 50):
 
 Genera el borrador del PAI."""
 
-    respuesta = await llamar_claude(SYSTEM_PROMPT, prompt, max_tokens=2000)
+    proveedor = obtener_proveedor("PAI")
+    respuesta = await proveedor.completar(SYSTEM_PROMPT, prompt, max_tokens=2000)
 
     try:
         pai = json.loads(respuesta)

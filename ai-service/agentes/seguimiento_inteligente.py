@@ -4,7 +4,7 @@ Analiza el historial de incidencias de un residente y genera un resumen clínico
 Usa pgvector para búsqueda semántica de patrones similares.
 """
 from core.pseudonimizador import pseudonimizar_seguimiento
-from core.claude_client import llamar_claude
+from core.llm_factory import obtener_proveedor
 from core.db import conexion_tenant
 import json
 
@@ -75,7 +75,8 @@ async def analizar_residente(centro_slug: str, residente_id: str) -> dict:
 
 Genera el análisis de seguimiento."""
 
-    respuesta = await llamar_claude(SYSTEM_PROMPT, prompt, max_tokens=800)
+    proveedor = obtener_proveedor("SEGUIMIENTO")
+    respuesta = await proveedor.completar(SYSTEM_PROMPT, prompt, max_tokens=800)
 
     try:
         analisis = json.loads(respuesta)

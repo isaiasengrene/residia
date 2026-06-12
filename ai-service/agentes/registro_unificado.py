@@ -4,7 +4,7 @@ Convierte mensajes de WhatsApp / texto libre / voz en una incidencia estructurad
 El profesional confirma el borrador antes de que se guarde definitivamente.
 """
 from core.pseudonimizador import pseudonimizar_incidencia, MapaTokens
-from core.claude_client import llamar_claude
+from core.llm_factory import obtener_proveedor
 
 SYSTEM_PROMPT = """Eres un asistente especializado en residencias de personas mayores en España.
 Tu única función es convertir mensajes de profesionales sanitarios en registros estructurados de incidencias.
@@ -44,7 +44,8 @@ sobre el residente {datos_pseudo.get('residente', 'RES-XXX')} (habitación {dato
 
 Genera el registro de incidencia estructurado."""
 
-    respuesta_json = await llamar_claude(SYSTEM_PROMPT, prompt, mapa=None, max_tokens=512)
+    proveedor = obtener_proveedor("REGISTRO")
+    respuesta_json = await proveedor.completar(SYSTEM_PROMPT, prompt, max_tokens=512)
 
     import json
     try:

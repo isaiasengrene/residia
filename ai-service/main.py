@@ -11,6 +11,7 @@ from agentes.registro_unificado import procesar_mensaje
 from agentes.comunicacion_familias import redactar_mensaje_familiar
 from agentes.seguimiento_inteligente import analizar_residente
 from agentes.automatizacion_pai import generar_borrador_pai
+from core.llm_factory import estado_proveedores
 
 
 @asynccontextmanager
@@ -58,7 +59,21 @@ class SolicitudPAI(BaseModel):
 
 @app.get("/health")
 async def health():
-    return {"estado": "operativo", "servicio": "ResidIA IA"}
+    return {
+        "estado": "operativo",
+        "servicio": "ResidIA IA",
+        "agentes": estado_proveedores(),
+    }
+
+
+@app.get("/agentes/configuracion")
+async def configuracion_agentes():
+    """Devuelve la configuración activa de proveedores por agente."""
+    return {
+        "configuracion": estado_proveedores(),
+        "proveedores_disponibles": ["anthropic", "openai", "google"],
+        "nota": "Configurable mediante variables de entorno AGENTE_{NOMBRE}_PROVEEDOR y AGENTE_{NOMBRE}_MODELO",
+    }
 
 
 @app.post("/agentes/registro")
