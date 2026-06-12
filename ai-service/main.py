@@ -62,7 +62,7 @@ async def health():
     return {
         "estado": "operativo",
         "servicio": "ResidIA IA",
-        "agentes": estado_proveedores(),
+        "agentes": await estado_proveedores(),
     }
 
 
@@ -70,9 +70,9 @@ async def health():
 async def configuracion_agentes():
     """Devuelve la configuración activa de proveedores por agente."""
     return {
-        "configuracion": estado_proveedores(),
+        "configuracion": await estado_proveedores(),
         "proveedores_disponibles": ["anthropic", "openai", "google"],
-        "nota": "Configurable mediante variables de entorno AGENTE_{NOMBRE}_PROVEEDOR y AGENTE_{NOMBRE}_MODELO",
+        "nota": "Configurable mediante variables de entorno o configuración en base de datos",
     }
 
 

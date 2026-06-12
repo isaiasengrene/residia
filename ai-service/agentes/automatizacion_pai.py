@@ -64,7 +64,7 @@ Historial de incidencias (últimas 50):
 
 Genera el borrador del PAI."""
 
-    proveedor = obtener_proveedor("PAI")
+    proveedor = await obtener_proveedor("PAI")
     respuesta = await proveedor.completar(SYSTEM_PROMPT, prompt, max_tokens=2000)
 
     try:

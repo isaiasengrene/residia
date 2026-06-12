@@ -14,6 +14,7 @@ import { ConsentimientosModule } from './modules/consentimientos/consentimientos
 import { ExpedienteModule } from './modules/expediente/expediente.module';
 import { TurnosModule } from './modules/turnos/turnos.module';
 import { AgentesModule } from './modules/agentes/agentes.module';
+import { ModelosIaModule } from './modules/modelos-ia/modelos-ia.module';
 
 @Module({
   imports: [
@@ -67,6 +68,7 @@ import { AgentesModule } from './modules/agentes/agentes.module';
     ExpedienteModule,
     TurnosModule,
     AgentesModule,
+    ModelosIaModule,
   ],
 })
 export class AppModule implements NestModule {

@@ -4,19 +4,11 @@ import anthropic
 import os
 from core.llm_provider import ProveedorLLM
 
-_cliente: anthropic.Anthropic | None = None
-
-
-def _obtener_cliente() -> anthropic.Anthropic:
-    global _cliente
-    if _cliente is None:
-        _cliente = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
-    return _cliente
-
 
 class ProveedorAnthropic(ProveedorLLM):
     def __init__(self, modelo: str = "claude-sonnet-4-6"):
         self.modelo = modelo
+        self._api_key_override: str | None = None
 
     @property
     def nombre_proveedor(self) -> str:
@@ -29,7 +21,8 @@ class ProveedorAnthropic(ProveedorLLM):
         max_tokens: int = 1024,
         temperatura: float = 0.3,
     ) -> str:
-        cliente = _obtener_cliente()
+        api_key = self._api_key_override or os.environ["ANTHROPIC_API_KEY"]
+        cliente = anthropic.Anthropic(api_key=api_key)
         respuesta = cliente.messages.create(
             model=self.modelo,
             max_tokens=max_tokens,

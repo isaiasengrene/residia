@@ -44,7 +44,7 @@ sobre el residente {datos_pseudo.get('residente', 'RES-XXX')} (habitación {dato
 
 Genera el registro de incidencia estructurado."""
 
-    proveedor = obtener_proveedor("REGISTRO")
+    proveedor = await obtener_proveedor("REGISTRO")
     respuesta_json = await proveedor.completar(SYSTEM_PROMPT, prompt, max_tokens=512)
 
     import json

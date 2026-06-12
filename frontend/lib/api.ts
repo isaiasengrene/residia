@@ -63,6 +63,13 @@ export const api = {
     cerrar: (id: string, data: unknown) => request<unknown>(`/turnos/${id}/cerrar`, { method: 'PATCH', body: JSON.stringify(data) }),
     traspasar: (id: string, data: unknown) => request<unknown>(`/turnos/${id}/traspasar`, { method: 'POST', body: JSON.stringify(data) }),
   },
+  modelosIa: {
+    listar: () => request<unknown[]>('/admin/modelos-ia'),
+    crear: (data: unknown) => request<unknown>('/admin/modelos-ia', { method: 'POST', body: JSON.stringify(data) }),
+    activar: (id: string) => request<unknown>(`/admin/modelos-ia/${id}/activar`, { method: 'PATCH' }),
+    desactivar: (id: string) => request<unknown>(`/admin/modelos-ia/${id}/desactivar`, { method: 'PATCH' }),
+    eliminar: (id: string) => request<unknown>(`/admin/modelos-ia/${id}`, { method: 'DELETE' }),
+  },
   auditoria: {
     listar: (pagina?: number) => request<unknown>(`/auditoria${pagina ? '?pagina=' + pagina : ''}`),
     verificar: () => request<{ integra: boolean; registros: number; roturas: number[] }>('/auditoria/verificar'),

@@ -5,19 +5,11 @@ from google import genai
 from google.genai import types
 from core.llm_provider import ProveedorLLM
 
-_cliente: genai.Client | None = None
-
-
-def _obtener_cliente() -> genai.Client:
-    global _cliente
-    if _cliente is None:
-        _cliente = genai.Client(api_key=os.environ["GOOGLE_API_KEY"])
-    return _cliente
-
 
 class ProveedorGoogle(ProveedorLLM):
     def __init__(self, modelo: str = "gemini-2.0-flash"):
         self.modelo = modelo
+        self._api_key_override: str | None = None
 
     @property
     def nombre_proveedor(self) -> str:
@@ -30,7 +22,8 @@ class ProveedorGoogle(ProveedorLLM):
         max_tokens: int = 1024,
         temperatura: float = 0.3,
     ) -> str:
-        cliente = _obtener_cliente()
+        api_key = self._api_key_override or os.environ["GOOGLE_API_KEY"]
+        cliente = genai.Client(api_key=api_key)
         config = types.GenerateContentConfig(
             system_instruction=system_prompt,
             max_output_tokens=max_tokens,

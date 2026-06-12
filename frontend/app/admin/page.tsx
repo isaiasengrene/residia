@@ -1,10 +1,44 @@
 // W16: Panel de administración · cumplimiento
+import Link from 'next/link';
 import AppLayout from '../components/AppLayout';
 
 export default function AdminPage() {
   return (
     <AppLayout>
       <div style={{ maxWidth: 900 }}>
+        {/* Accesos rápidos admin */}
+        <div style={{ display: 'flex', gap: 12, marginBottom: 18 }}>
+          <Link href="/admin/modelos-ia" style={{ textDecoration: 'none' }}>
+            <div style={{
+              background: '#fff', border: '1px solid #ECECF0', borderRadius: 14,
+              padding: '14px 18px', minWidth: 180, cursor: 'pointer',
+              boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
+              transition: 'box-shadow 0.15s',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: 6 }}>
+                <div style={{
+                  width: 32, height: 32, borderRadius: 9,
+                  background: 'linear-gradient(135deg,#0071E3,#30D158)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" stroke="#fff" strokeWidth="1.8"/>
+                    <path d="M19.5 12a7.5 7.5 0 1 1-15 0 7.5 7.5 0 0 1 15 0Z" stroke="#fff" strokeWidth="1.4"/>
+                    <path d="M12 2v2M12 20v2M2 12h2M20 12h2" stroke="#fff" strokeWidth="1.4" strokeLinecap="round"/>
+                  </svg>
+                </div>
+                <span style={{
+                  fontFamily: "-apple-system,'SF Pro Display','SF Pro Text',system-ui,sans-serif",
+                  fontWeight: 700, fontSize: 14, color: '#1D1D1F',
+                }}>Modelos IA</span>
+              </div>
+              <div style={{ fontSize: 12, color: '#86868B', lineHeight: 1.4 }}>
+                Configura proveedores y API keys cifradas por agente
+              </div>
+            </div>
+          </Link>
+        </div>
+
         {/* Header */}
         <div style={{ marginBottom: 15 }}>
           <div style={{

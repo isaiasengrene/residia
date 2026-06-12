@@ -34,7 +34,7 @@ Situación del residente {datos_pseudo.get('residente', 'RES-XXX')} (área: {dat
 
 Redacta el mensaje para el familiar."""
 
-    proveedor = obtener_proveedor("COMUNICACION")
+    proveedor = await obtener_proveedor("COMUNICACION")
     borrador_texto = await proveedor.completar(SYSTEM_PROMPT, prompt, max_tokens=600)
 
     return {

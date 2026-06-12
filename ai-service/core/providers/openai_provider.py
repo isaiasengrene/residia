@@ -4,19 +4,11 @@ import os
 from openai import AsyncOpenAI
 from core.llm_provider import ProveedorLLM
 
-_cliente: AsyncOpenAI | None = None
-
-
-def _obtener_cliente() -> AsyncOpenAI:
-    global _cliente
-    if _cliente is None:
-        _cliente = AsyncOpenAI(api_key=os.environ["OPENAI_API_KEY"])
-    return _cliente
-
 
 class ProveedorOpenAI(ProveedorLLM):
     def __init__(self, modelo: str = "gpt-4o"):
         self.modelo = modelo
+        self._api_key_override: str | None = None
 
     @property
     def nombre_proveedor(self) -> str:
@@ -29,7 +21,8 @@ class ProveedorOpenAI(ProveedorLLM):
         max_tokens: int = 1024,
         temperatura: float = 0.3,
     ) -> str:
-        cliente = _obtener_cliente()
+        api_key = self._api_key_override or os.environ["OPENAI_API_KEY"]
+        cliente = AsyncOpenAI(api_key=api_key)
         respuesta = await cliente.chat.completions.create(
             model=self.modelo,
             max_tokens=max_tokens,

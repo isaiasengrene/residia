@@ -75,7 +75,7 @@ async def analizar_residente(centro_slug: str, residente_id: str) -> dict:
 
 Genera el análisis de seguimiento."""
 
-    proveedor = obtener_proveedor("SEGUIMIENTO")
+    proveedor = await obtener_proveedor("SEGUIMIENTO")
     respuesta = await proveedor.completar(SYSTEM_PROMPT, prompt, max_tokens=800)
 
     try:
