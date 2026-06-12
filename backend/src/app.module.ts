@@ -15,6 +15,8 @@ import { ExpedienteModule } from './modules/expediente/expediente.module';
 import { TurnosModule } from './modules/turnos/turnos.module';
 import { AgentesModule } from './modules/agentes/agentes.module';
 import { ModelosIaModule } from './modules/modelos-ia/modelos-ia.module';
+import { PaiModule } from './modules/pai/pai.module';
+import { JobsModule } from './modules/jobs/jobs.module';
 
 @Module({
   imports: [
@@ -69,6 +71,8 @@ import { ModelosIaModule } from './modules/modelos-ia/modelos-ia.module';
     TurnosModule,
     AgentesModule,
     ModelosIaModule,
+    PaiModule,
+    JobsModule,
   ],
 })
 export class AppModule implements NestModule {

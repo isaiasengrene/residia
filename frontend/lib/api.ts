@@ -78,4 +78,20 @@ export const api = {
     obtener: (residenteId: string) => request<unknown>(`/expediente/${residenteId}`),
     exportar: (residenteId: string) => request<unknown>(`/expediente/${residenteId}/exportar`),
   },
+  pai: {
+    listar: () => request<unknown[]>('/pai'),
+    porResidente: (residenteId: string) => request<unknown[]>(`/pai/residente/${residenteId}`),
+    obtener: (id: string) => request<unknown>(`/pai/${id}`),
+    crear: (data: unknown) => request<unknown>('/pai', { method: 'POST', body: JSON.stringify(data) }),
+    generarIA: (residenteId: string) => request<unknown>(`/pai/generar-ia/${residenteId}`, { method: 'POST' }),
+    aprobar: (id: string) => request<unknown>(`/pai/${id}/aprobar`, { method: 'PATCH' }),
+    archivar: (id: string) => request<unknown>(`/pai/${id}/archivar`, { method: 'PATCH' }),
+  },
+  jobs: {
+    estado: (cola: string, jobId: string) => request<unknown>(`/jobs/${cola}/${jobId}`),
+  },
+  agentesIA: {
+    health: () => request<unknown>('/agentes/health'),
+    seguimiento: (residenteId: string) => request<unknown>(`/agentes/seguimiento/${residenteId}`, { method: 'POST' }),
+  },
 };
