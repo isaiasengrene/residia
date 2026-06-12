@@ -94,4 +94,20 @@ export const api = {
     health: () => request<unknown>('/agentes/health'),
     seguimiento: (residenteId: string) => request<unknown>(`/agentes/seguimiento/${residenteId}`, { method: 'POST' }),
   },
+  portalFamiliar: {
+    login: (email: string, centroSlug: string) => request<unknown>('/portal-familiar/login', { method: 'POST', body: JSON.stringify({ email, centroSlug }) }),
+    residente: () => request<unknown>('/portal-familiar/residente'),
+    incidencias: () => request<unknown>('/portal-familiar/incidencias'),
+    comunicaciones: () => request<unknown>('/portal-familiar/comunicaciones'),
+    enviarMensaje: (texto: string) => request<unknown>('/portal-familiar/mensaje', { method: 'POST', body: JSON.stringify({ texto }) }),
+  },
+  inspeccion: {
+    generarCredencial: (horas: number, ambito: string) => request<unknown>('/inspeccion/credencial', { method: 'POST', body: JSON.stringify({ horas, ambito }) }),
+    validar: (codigo: string, centroSlug: string) => request<unknown>('/inspeccion/validar', { method: 'POST', body: JSON.stringify({ codigo, centroSlug }) }),
+    exportar: (desde: string, hasta: string) => request<unknown>(`/inspeccion/exportar?desde=${desde}&hasta=${hasta}`),
+  },
+  documentos: {
+    pdfIncidencia: (id: string) => `${process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'}/documentos/incidencia/${id}/pdf`,
+    pdfPai: (id: string) => `${process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'}/documentos/pai/${id}/pdf`,
+  },
 };

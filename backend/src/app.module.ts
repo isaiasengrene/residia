@@ -17,6 +17,10 @@ import { AgentesModule } from './modules/agentes/agentes.module';
 import { ModelosIaModule } from './modules/modelos-ia/modelos-ia.module';
 import { PaiModule } from './modules/pai/pai.module';
 import { JobsModule } from './modules/jobs/jobs.module';
+import { PortalFamiliarModule } from './modules/portal-familiar/portal-familiar.module';
+import { InspeccionModule } from './modules/inspeccion/inspeccion.module';
+import { DocumentosModule } from './modules/documentos/documentos.module';
+import { WhatsappModule } from './modules/whatsapp/whatsapp.module';
 
 @Module({
   imports: [
@@ -73,6 +77,10 @@ import { JobsModule } from './modules/jobs/jobs.module';
     ModelosIaModule,
     PaiModule,
     JobsModule,
+    PortalFamiliarModule,
+    InspeccionModule,
+    DocumentosModule,
+    WhatsappModule,
   ],
 })
 export class AppModule implements NestModule {
@@ -80,7 +88,13 @@ export class AppModule implements NestModule {
     // El middleware de tenant aplica a todas las rutas excepto /auth/*
     consumer
       .apply(TenantMiddleware)
-      .exclude({ path: 'auth/(.*)', method: RequestMethod.ALL })
+      .exclude(
+        { path: 'auth/(.*)', method: RequestMethod.ALL },
+        { path: 'portal-familiar/login', method: RequestMethod.POST },
+        { path: 'inspeccion/validar', method: RequestMethod.POST },
+        { path: 'whatsapp/webhook', method: RequestMethod.GET },
+        { path: 'whatsapp/webhook', method: RequestMethod.POST },
+      )
       .forRoutes('*');
   }
 }
