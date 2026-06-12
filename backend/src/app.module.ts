@@ -13,6 +13,7 @@ import { AdminModule } from './modules/admin/admin.module';
 import { ConsentimientosModule } from './modules/consentimientos/consentimientos.module';
 import { ExpedienteModule } from './modules/expediente/expediente.module';
 import { TurnosModule } from './modules/turnos/turnos.module';
+import { AgentesModule } from './modules/agentes/agentes.module';
 
 @Module({
   imports: [
@@ -65,6 +66,7 @@ import { TurnosModule } from './modules/turnos/turnos.module';
     ConsentimientosModule,
     ExpedienteModule,
     TurnosModule,
+    AgentesModule,
   ],
 })
 export class AppModule implements NestModule {
